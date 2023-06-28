@@ -1,4 +1,7 @@
+import * as React from "react";
+
 import { get } from "@vercel/edge-config";
+
 import Image from "next/image";
 import { redirect } from "next/navigation";
 
@@ -174,10 +177,15 @@ interface Social {
 }
 
 export default async function HomePage() {
-  const data: Data | undefined = await get("linktree");
+  const edgeConfigId = process.env.EDGE_CONFIG;
+
+  if (!edgeConfigId) {
+    throw new Error("Edge Config ID not provided");
+  }
+
+  const data: Data | undefined = await get(edgeConfigId);
 
   if (!data) {
-    // not working yet https://github.com/vercel/next.js/issues/44232
     redirect("/");
   }
 
